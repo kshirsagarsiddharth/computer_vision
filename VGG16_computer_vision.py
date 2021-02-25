@@ -37,4 +37,43 @@ base_dir = r'D:\project\udemy_cv\Computer-Vision-with-Python\deep_learning\keras
 train_dir = os.path.join(base_dir,'train') 
 validation_dir = os.path.join(base_dir,'validation') 
 test_dir = os.path.join(base_dir,'test')
+
+datagen = ImageDataGenerator(rescale=1./255) 
+batch_size = 20 
+
+# %%
+
+directory = train_dir 
+# the directory
+sample_count = 2000
+# the samples stored in the directory 
+
+# final feature map was 4,4,512 on this we will stick our dense layer 
+features = np.zeros(shape=(sample_count,4,4,512)) 
+labels = np.zeros(shape = (sample_count))
+
+generator = datagen.flow_from_directory(
+    directory,
+    target_size=(150,150),
+    batch_size=batch_size, # at a time take 20 images from the directory 
+    class_mode='binary' 
+)
+
+# the generator DirectoryIterator yields tuples of (x,y) where x is a numpy array containing batch of 
+# images with shape (batch_size,*target_size, channels) -- In this case --> (20,150,150,3) and y is label 
+
+i = 0 
+
+input_batch, labels_batch = next(generator)
+
+
+
+
+
+# %%
+# we put the image in pre trained convnet and extract the features
+features_batch = conv_base.predict(input_batch)
+i = 0
+features[i * batch_size:(i + 1) * batch_size]  = features_batch 
+labels[i * batch_size: (i + 1) * batch_size] = labels_batch
 # %%
