@@ -102,7 +102,7 @@ from tensorflow.keras import optimizers
 model = models.Sequential() 
 # need to define a input dimension as we are feeding the features 
 # extracted from the convnet we need to specify those dimensions 
-model.add(layers.Dense(256, activation= 'relu', input_dim = 4 * 4 * 512)) 
+model.add(layers.Dense(512, activation= 'relu', input_dim = 4 * 4 * 512)) 
 model.add(layers.Dropout(0.5)) 
 model.add(layers.Dense(1, activation = 'sigmoid')) 
 
@@ -112,8 +112,27 @@ model.compile(
     metrics = ['accuracy']
 )
 # %%
-model.fit(train_features, train_labels,
+history = model.fit(train_features, train_labels,
 batch_size=32,
 epochs=20,
 validation_data=(validation_features, validation_labels)
 )
+# %%
+import matplotlib.pyplot as plt
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+plt.plot(loss, label = 'train_loss')
+plt.plot(val_loss, label = 'val_loss')
+plt.xlabel('no epochs')
+plt.ylabel('loss')
+plt.legend()
+# %%
+import matplotlib.pyplot as plt
+loss = history.history['accuracy']
+val_loss = history.history['val_accuracy']
+plt.plot(loss, label = 'train_acc')
+plt.plot(val_loss, label = 'val_acc')
+plt.xlabel('no epochs')
+plt.ylabel('acc')
+plt.legend()
+# %%
