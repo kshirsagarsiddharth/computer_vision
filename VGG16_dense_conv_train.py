@@ -88,10 +88,11 @@ metrics = ['accuracy']
 
 # %%
 
-history = model.fit(train_generator,epochs=100,
+history = model.fit(train_generator,
 steps_per_epoch=100,
 epochs = 30,
 validation_data=validation_generator,
 validation_steps = 50,
 shuffle=True
 )
+# %%
