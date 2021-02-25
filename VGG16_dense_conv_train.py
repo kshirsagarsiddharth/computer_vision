@@ -2,10 +2,12 @@
 # the previous technique didnot use any data agumentation 
 # this training is slower than previous examples but lets use data agumentation for training 
 # from keras import models 
+
+#this technique is  feature extraction
 from tensorflow.keras import models 
 from tensorflow.keras import layers 
 from tensorflow.keras.applications import VGG16
-from tensorflow.python.ops.gen_math_ops import mod 
+#from tensorflow.python.ops.gen_math_ops import mod 
 import os
 import numpy as np 
 base_dir = r'D:\project\udemy_cv\Computer-Vision-with-Python\deep_learning\keras_basis.py\cats_and_dogs_small'
@@ -95,4 +97,26 @@ validation_data=validation_generator,
 validation_steps = 50,
 shuffle=True
 )
+# %%
+history.history['accuracy']
+# %%
+history.history['val_accuracy']
+# %%
+import matplotlib.pyplot as plt
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+plt.plot(loss, label = 'train_loss')
+plt.plot(val_loss, label = 'val_loss')
+plt.xlabel('no epochs')
+plt.ylabel('loss')
+plt.legend()
+# %%
+import matplotlib.pyplot as plt
+loss = history.history['accuracy']
+val_loss = history.history['val_accuracy']
+plt.plot(loss, label = 'train_acc')
+plt.plot(val_loss, label = 'val_acc')
+plt.xlabel('no epochs')
+plt.ylabel('acc')
+plt.legend()
 # %%
