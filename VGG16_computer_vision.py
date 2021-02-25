@@ -47,46 +47,35 @@ batch_size = 20
 # the directory
 #sample_count = 2000
 # the samples stored in the directory 
-directory = validation_dir 
-sample_count = 1000
-# final feature map was 4,4,512 on this we will stick our dense layer 
 
 
-# the generator DirectoryIterator yields tuples of (x,y) where x is a numpy array containing batch of 
-# images with shape (batch_size,*target_size, channels) -- In this case --> (20,150,150,3) and y is label 
+def extract_features(directory, sample_count):
+    # create a features array of sample count as first dimension and 
+    # last dimensions as dimensions output by the conv_base 
+    features = np.zeros(shape=(sample_count, 4, 4, 512))
+    labels = np.zeros(shape = (sample_count)) 
+    # flow batch_size images from directory 
+    generator = datagen.flow_from_directory(
+        directory,
+        target_size = (150,150),
+        batch_size=batch_size,
+        class_mode='binary'
+    )
 
-
-
-features = np.zeros(shape=(sample_count,4,4,512))
-labels = np.zeros(shape = sample_count)
-
-image_gen = datagen.flow_from_directory(
-    directory,
-    target_size=(150,150),
-    class_mode='binary',
-    batch_size= batch_size # at one iterations flows 20 images
-)
-#i = 0
-#batch_features, batch_labels = next(image_gen)
-#predicted_features = conv_base.predict(batch_features)
-#features[i * batch_size:(i + 1) * batch_size] = predicted_features 
-#labels[i * batch_size : (i + 1) * batch_size] = batch_labels 
-i = 0
-for batch_features, batch_labels in image_gen: 
-    print(i)
-    # shape of predicted_features is (20, 4,4,512)
-    predicted_features = conv_base.predict(batch_features) 
-    features[i * batch_size:(i+1) * batch_size] = predicted_features
-    labels[i * batch_size: (i + 1) * batch_size] = batch_labels 
-    i+= 1
-    if i * batch_size >= sample_count:
-        break 
-
+    i = 0 
+    # for each batch add the extracted features from convnet for the 
+    # image into the defined array
+    for input_batch, labels_batch in generator:
+        features_batch = conv_base.predict(input_batch) 
+        features[i * batch_size: (i + 1) * batch_size] = features_batch 
+        labels[i * batch_size : (i + 1) * batch_size] = labels_batch 
+        i += 1 
+        if i * batch_size >= sample_count:
+            break 
+    return features, labels
 
 
 # %%
-predicted_features.shape
-batch_labels
 # %%
 
 # %%
