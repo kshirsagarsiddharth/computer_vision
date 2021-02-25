@@ -1,6 +1,8 @@
 #%%
 from tensorflow.keras.applications import VGG16 
-import numpy as np 
+import numpy as np
+from tensorflow.python.keras import activations
+from tensorflow.python.ops.gen_math_ops import mod 
 
 conv_base = VGG16(weights = 'imagenet',
                   include_top = False,
@@ -93,3 +95,25 @@ train_features.shape
 # %%
 validation_features.shape
 # %%
+
+from tensorflow.keras import models 
+from tensorflow.keras import layers 
+from tensorflow.keras import optimizers 
+model = models.Sequential() 
+# need to define a input dimension as we are feeding the features 
+# extracted from the convnet we need to specify those dimensions 
+model.add(layers.Dense(256, activation= 'relu', input_dim = 4 * 4 * 512)) 
+model.add(layers.Dropout(0.5)) 
+model.add(layers.Dense(1, activation = 'sigmoid')) 
+
+model.compile(
+    optimizer = optimizers.RMSprop(learning_rate=2e-5) ,
+    loss = 'binary_crossentropy',
+    metrics = ['accuracy']
+)
+# %%
+model.fit(train_features, train_labels,
+batch_size=32,
+epochs=20,
+validation_data=(validation_features, validation_labels)
+)
