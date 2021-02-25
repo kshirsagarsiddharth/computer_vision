@@ -75,7 +75,21 @@ def extract_features(directory, sample_count):
     return features, labels
 
 
-# %%
-# %%
+# %% 
 
+train_features, train_labels = extract_features(train_dir, 2000)
+validation_features, validation_labels = extract_features(validation_dir, 1000)
+test_features, test_labels = extract_features(test_dir, 1000) 
+
+print(train_features.shape, train_labels.shape) 
+print(validation_features.shape, validation_labels.shape)
+# %%
+# we need to flatten this features to feed to the dense network 
+train_features = np.reshape(train_features, (2000, 4 * 4 * 512))
+validation_features = np.reshape(validation_features, (1000, 4 * 4 * 512)) 
+test_features = np.reshape(test_features, (1000, 4 * 4 * 512)) 
+# %%
+train_features.shape
+# %%
+validation_features.shape
 # %%
